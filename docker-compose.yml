@@ -1,0 +1,61 @@
+version: "3"
+services:
+  daily-trend-service:
+    build:
+      context: "."
+      dockerfile: "./server/daily-trend-service/Dockerfile"
+    depends_on:
+      - daily-trend-db
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./server/daily-trend-service:/usr/src/app
+
+  daily-trend-db:
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - MYSQL_DATABASE=daily-trend-db
+    image: postgres:latest
+    ports:
+      - "3006:5432"
+
+  national-total-service:
+    build:
+      context: "."
+      dockerfile: "./server/national-total-service/Dockerfile"
+    depends_on:
+      - national-total-db
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./server/national-total-service:/usr/src/app
+
+  national-total-db:
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - MYSQL_DATABASE=national-total-db
+    image: postgres:latest
+    ports:
+      - "3007:5432"
+
+  cumulative-trend-service:
+    build:
+      context: "."
+      dockerfile: "./server/cumulative-trend-service/Dockerfile"
+    depends_on:
+      - cumulative-trend-db
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server/cumulative-trend-service:/usr/src/app
+
+  cumulative-trend-db:
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cumulative-trend-db
+    image: postgres:latest
+    ports:
+      - "3005:5432"

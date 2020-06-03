@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  License: Apache-2.0
+Description:
+  "AWS CloudFormation Sample Template RDS_with_DBParameterGroup: Sample
+  template showing how to create an Amazon RDS Database Instance with a DBParameterGroup.**WARNING**
+  This template creates an Amazon Relational Database Service database instance. You
+  will be billed for the AWS resources used if you create a stack from this template."
+Parameters:
+  StackName:
+    Type: String
+    Default: dev-vpc
+    Description:
+      The name of the parent cluster stack that you created. Necessary
+      to locate and reference resources created by that stack.
+  DBName:
+    Default: MyDatabase
+    Description: The database name
+    Type: String
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  DBUser:
+    NoEcho: "true"
+    Description: The database admin account username
+    Type: String
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  DBPassword:
+    NoEcho: "true"
+    Description: The database admin account password
+    Type: String
+    MinLength: "8"
+    MaxLength: "41"
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+Resources:
+  MyRDSSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: "RDS Subnet Group"
+      DBSubnetGroupName: MyRDSSubnetGroup
+      SubnetIds:
+        - Fn::ImportValue: !Join [":", [!Ref "StackName", "PublicSubnetOne"]]
+        - Fn::ImportValue: !Join [":", [!Ref "StackName", "PublicSubnetTwo"]]
+
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref "DBName"
+      AllocatedStorage: "5"
+      DBInstanceClass: db.t2.micro
+      Engine: postgres
+      EngineVersion: 11.7
+      MasterUsername: !Ref "DBUser"
+      MasterUserPassword: !Ref "DBPassword"
+      DBSubnetGroupName: !Ref MyRDSSubnetGroup
+      PubliclyAccessible: true
+
+Outputs:
+  JDBCConnectionString:
+    Description: JDBC connection string for the database
+    Value:
+      !Join [
+        "",
+        [
+          "jdbc:postgresql://",
+          !GetAtt [MyDB, Endpoint.Address],
+          ":",
+          !GetAtt [MyDB, Endpoint.Port],
+          /,
+          !Ref "DBName",
+          "?user=",
+          !Ref DBUser,
+          "&password=",
+          !Ref DBPassword,
+        ],
+      ]

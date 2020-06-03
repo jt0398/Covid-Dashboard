@@ -1,0 +1,460 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: The CloudFormation template for the CodePipeline.
+
+Parameters:
+  StackName:
+    Type: String
+    Default: <VPC STACK NAME>
+    Description: The name of the VPC stack that you created. Necessary
+      to locate and reference resources created by that stack.
+  GithubUserName:
+    Type: String
+    Default: <GITHUB ACCOUNT>
+  GithubRepo:
+    Type: String
+    Default: <GITHUB REPOSITORY>
+  GithubBranch:
+    Type: String
+    Default: master
+  GithubOAuthToken:
+    Type: String
+    Default: <GITHUB ACCESS TOKEN>
+
+Resources:
+  # Create an ECR Repository to store docker images
+  ECRRepositoryClient:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "client-ecr"]]
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 1 image",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+
+  ECRRepositoryCumulative:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "cumulative-ecr"]]
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 1 image",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+
+  ECRRepositoryDaily:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "daily-ecr"]]
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 1 image",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+
+  ECRRepositoryNational:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "national-ecr"]]
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 1 image",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+
+  # Create an S3 Bucket to store build artifacts
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join ["-", [!Ref "AWS::StackName", "s3bucket"]]
+
+  # Create Access Role for CodePipeLine
+  CodePipeLineExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+
+  # Create Access Role for CodeBuild
+  CodeBuildExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  # Create Access Role for Cloudformation
+  CloudformationExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+
+  # Create the BuildProject with required Build information
+  BuildProjectClient:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: True
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: ECR_REPOSITORY_URI
+            Value:
+              !Join [
+                ".",
+                [
+                  !Ref "AWS::AccountId",
+                  "dkr.ecr",
+                  !Ref "AWS::Region",
+                  !Join ["/", ["amazonaws.com", !Ref "ECRRepositoryClient"]],
+                ],
+              ]
+      Name: !Join ["-", [!Ref "AWS::StackName", "client-buildproject"]]
+      ServiceRole: !Ref CodeBuildExecutionRole
+      Source:
+        Type: CODEPIPELINE
+        # This file (buildspec.yml In Source code) contains commands to Create and Push a docker image to the ECR_REPOSITORY_URI
+        BuildSpec: client/buildspec.yml
+
+  BuildProjectCumulative:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: True
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: ECR_REPOSITORY_URI
+            Value:
+              !Join [
+                ".",
+                [
+                  !Ref "AWS::AccountId",
+                  "dkr.ecr",
+                  !Ref "AWS::Region",
+                  !Join [
+                    "/",
+                    ["amazonaws.com", !Ref "ECRRepositoryCumulative"],
+                  ],
+                ],
+              ]
+      Name: !Join ["-", [!Ref "AWS::StackName", "cumulative-buildproject"]]
+      ServiceRole: !Ref CodeBuildExecutionRole
+      Source:
+        Type: CODEPIPELINE
+        # This file (buildspec.yml In Source code) contains commands to Create and Push a docker image to the ECR_REPOSITORY_URI
+        BuildSpec: server/cumulative-trend-service/buildspec.yml
+
+  BuildProjectDaily:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: True
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: ECR_REPOSITORY_URI
+            Value:
+              !Join [
+                ".",
+                [
+                  !Ref "AWS::AccountId",
+                  "dkr.ecr",
+                  !Ref "AWS::Region",
+                  !Join ["/", ["amazonaws.com", !Ref "ECRRepositoryDaily"]],
+                ],
+              ]
+      Name: !Join ["-", [!Ref "AWS::StackName", "daily-buildproject"]]
+      ServiceRole: !Ref CodeBuildExecutionRole
+      Source:
+        Type: CODEPIPELINE
+        # This file (buildspec.yml In Source code) contains commands to Create and Push a docker image to the ECR_REPOSITORY_URI
+        BuildSpec: server/daily-trend-service/buildspec.yml
+
+  BuildProjectNational:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: True
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: ECR_REPOSITORY_URI
+            Value:
+              !Join [
+                ".",
+                [
+                  !Ref "AWS::AccountId",
+                  "dkr.ecr",
+                  !Ref "AWS::Region",
+                  !Join ["/", ["amazonaws.com", !Ref "ECRRepositoryNational"]],
+                ],
+              ]
+      Name: !Join ["-", [!Ref "AWS::StackName", "national-buildproject"]]
+      ServiceRole: !Ref CodeBuildExecutionRole
+      Source:
+        Type: CODEPIPELINE
+        # This file (buildspec.yml In Source code) contains commands to Create and Push a docker image to the ECR_REPOSITORY_URI
+        BuildSpec: server/national-total-service/buildspec.yml
+
+  # Create CodePipeline with 3 stages (Source, Build and Deploy)
+  CodePipeLine:
+    Type: AWS::CodePipeline::Pipeline
+    DependsOn: S3Bucket
+    Properties:
+      ArtifactStore:
+        Location: !Join ["-", [!Ref "AWS::StackName", "s3bucket"]]
+        Type: S3
+      Name: !Join ["-", [!Ref "AWS::StackName", "CodePipeLine"]]
+      RestartExecutionOnUpdate: False
+      RoleArn:
+        Fn::GetAtt: [CodePipeLineExecutionRole, Arn]
+
+      Stages:
+        # Download source code from Github Repo to source-output-artifacts path in S3 Bucket
+        - Name: Source
+          Actions:
+            - Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: "1"
+              Configuration:
+                Repo: !Ref GithubRepo
+                Branch: !Ref GithubBranch
+                Owner: !Ref GithubUserName
+                OAuthToken: !Ref GithubOAuthToken
+              RunOrder: 1
+              OutputArtifacts:
+                - Name: source-output-artifacts
+
+        # Build the project using the BuildProject and Output build artifacts to build-output-artifacts path in S3 Bucket
+        - Name: Build
+          Actions:
+            - Name: BuildClient
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: build-output-artifacts-client
+              InputArtifacts:
+                - Name: source-output-artifacts
+              Configuration:
+                ProjectName: !Ref BuildProjectClient
+              RunOrder: 1
+            - Name: BuildCumulative
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: build-output-artifacts-cumulative
+              InputArtifacts:
+                - Name: source-output-artifacts
+              Configuration:
+                ProjectName: !Ref BuildProjectCumulative
+              RunOrder: 1
+            - Name: BuildDaily
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: build-output-artifacts-daily
+              InputArtifacts:
+                - Name: source-output-artifacts
+              Configuration:
+                ProjectName: !Ref BuildProjectDaily
+              RunOrder: 1
+            - Name: BuildNational
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: build-output-artifacts-national
+              InputArtifacts:
+                - Name: source-output-artifacts
+              Configuration:
+                ProjectName: !Ref BuildProjectNational
+              RunOrder: 1
+
+        # Deploy the project by executing ecs-service-client.yml file in the Source code with Cloudformation.
+        - Name: Deploy
+          Actions:
+            - Name: DeployClient
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: source-output-artifacts
+                - Name: build-output-artifacts-client
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                # Pass parameter values to ecs-service-client.yml for deployment
+                ParameterOverrides: !Sub |
+                  {
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-client", "imageDetail-Client.json", "ImageURI"] },
+                    "StackName": "${StackName}"
+                  }
+                RoleArn:
+                  Fn::GetAtt: [CloudformationExecutionRole, Arn]
+                StackName:
+                  !Join ["-", [!Ref "AWS::StackName", "client-ecs-service"]]
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service-client.yml
+              RunOrder: 1
+            - Name: DeployCumulative
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: source-output-artifacts
+                - Name: build-output-artifacts-cumulative
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                # Pass parameter values to ecs-service-cumulative.yml for deployment
+                ParameterOverrides: !Sub |
+                  {
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-cumulative", "imageDetail-Cumulative.json", "ImageURI"] },
+                    "StackName": "${StackName}"
+                  }
+                RoleArn:
+                  Fn::GetAtt: [CloudformationExecutionRole, Arn]
+                StackName:
+                  !Join ["-", [!Ref "AWS::StackName", "cumulative-ecs-service"]]
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service-cumulative.yml
+              RunOrder: 1
+            - Name: DeployDaily
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: source-output-artifacts
+                - Name: build-output-artifacts-daily
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                # Pass parameter values to ecs-service-daily.yml for deployment
+                ParameterOverrides: !Sub |
+                  {
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-daily", "imageDetail-Daily.json", "ImageURI"] },
+                    "StackName": "${StackName}"
+                  }
+                RoleArn:
+                  Fn::GetAtt: [CloudformationExecutionRole, Arn]
+                StackName:
+                  !Join ["-", [!Ref "AWS::StackName", "daily-ecs-service"]]
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service-daily.yml
+              RunOrder: 1
+            - Name: DeployNational
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: source-output-artifacts
+                - Name: build-output-artifacts-national
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                # Pass parameter values to ecs-service-national.yml for deployment
+                ParameterOverrides: !Sub |
+                  {
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-national", "imageDetail-National.json", "ImageURI"] },
+                    "StackName": "${StackName}"
+                  }
+                RoleArn:
+                  Fn::GetAtt: [CloudformationExecutionRole, Arn]
+                StackName:
+                  !Join ["-", [!Ref "AWS::StackName", "national-ecs-service"]]
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service-national.yml
+              RunOrder: 1
