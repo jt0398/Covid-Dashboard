@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Metadata:
   License: Apache-2.0
-Description:
-  "AWS CloudFormation Sample Template RDS_with_DBParameterGroup: Sample
-  template showing how to create an Amazon RDS Database Instance with a DBParameterGroup.**WARNING**
-  This template creates an Amazon Relational Database Service database instance. You
-  will be billed for the AWS resources used if you create a stack from this template."
+Description: "Deploys RDS databases for multiple microservices"
 Parameters:
   StackName:
     Type: String
@@ -13,9 +9,8 @@ Parameters:
     Description:
       The name of the parent cluster stack that you created. Necessary
       to locate and reference resources created by that stack.
-  DBName:
-    Default: MyDatabase
-    Description: The database name
+  CumulativeDBName:
+    Description: Cumulative database name
     Type: String
     MinLength: "1"
     MaxLength: "64"
@@ -23,9 +18,9 @@ Parameters:
     ConstraintDescription:
       must begin with a letter and contain only alphanumeric
       characters.
-  DBUser:
+  CumulativeDBUser:
     NoEcho: "true"
-    Description: The database admin account username
+    Description: The admin account username of Cumulative database
     Type: String
     MinLength: "1"
     MaxLength: "16"
@@ -33,53 +28,175 @@ Parameters:
     ConstraintDescription:
       must begin with a letter and contain only alphanumeric
       characters.
-  DBPassword:
+  CumulativeDBPassword:
     NoEcho: "true"
-    Description: The database admin account password
+    Description: The admin account password of Cumulative database
+    Type: String
+    MinLength: "8"
+    MaxLength: "41"
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+  DailyDBName:
+    Description: Daily database name
+    Type: String
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  DailyDBUser:
+    NoEcho: "true"
+    Description: The admin account username of Daily database
+    Type: String
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  DailyDBPassword:
+    NoEcho: "true"
+    Description: The admin account password of Daily database
+    Type: String
+    MinLength: "8"
+    MaxLength: "41"
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+  NationalDBName:
+    Description: National database name
+    Type: String
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  NationalDBUser:
+    NoEcho: "true"
+    Description: The admin account username of National database
+    Type: String
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
+      characters.
+  NationalDBPassword:
+    NoEcho: "true"
+    Description: The admin account password of National database
     Type: String
     MinLength: "8"
     MaxLength: "41"
     AllowedPattern: "[a-zA-Z0-9]*"
     ConstraintDescription: must contain only alphanumeric characters.
 Resources:
-  MyRDSSubnetGroup:
+  RDSSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
       DBSubnetGroupDescription: "RDS Subnet Group"
-      DBSubnetGroupName: MyRDSSubnetGroup
+      DBSubnetGroupName: RDSSubnetGroup
       SubnetIds:
         - Fn::ImportValue: !Join [":", [!Ref "StackName", "PublicSubnetOne"]]
         - Fn::ImportValue: !Join [":", [!Ref "StackName", "PublicSubnetTwo"]]
 
-  MyDB:
+  CumulativeDB:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBName: !Ref "DBName"
+      DBName: !Ref "CumulativeDBName"
       AllocatedStorage: "5"
       DBInstanceClass: db.t2.micro
       Engine: postgres
       EngineVersion: 11.7
-      MasterUsername: !Ref "DBUser"
-      MasterUserPassword: !Ref "DBPassword"
-      DBSubnetGroupName: !Ref MyRDSSubnetGroup
+      MasterUsername: !Ref "CumulativeDBUser"
+      MasterUserPassword: !Ref "CumulativeDBPassword"
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      PubliclyAccessible: true
+
+  DailyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref "DailyDBName"
+      AllocatedStorage: "5"
+      DBInstanceClass: db.t2.micro
+      Engine: postgres
+      EngineVersion: 11.7
+      MasterUsername: !Ref "DailyDBUser"
+      MasterUserPassword: !Ref "DailyDBPassword"
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      PubliclyAccessible: true
+
+  NationalDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref "NationalDBName"
+      AllocatedStorage: "5"
+      DBInstanceClass: db.t2.micro
+      Engine: postgres
+      EngineVersion: 11.7
+      MasterUsername: !Ref "NationalDBUser"
+      MasterUserPassword: !Ref "NationalDBPassword"
+      DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
 
 Outputs:
-  JDBCConnectionString:
-    Description: JDBC connection string for the database
+  CumulativeJDBCURI:
+    Description: JDBC connection string for Cumulative database
     Value:
       !Join [
         "",
         [
           "jdbc:postgresql://",
-          !GetAtt [MyDB, Endpoint.Address],
+          !GetAtt [CumulativeDB, Endpoint.Address],
           ":",
-          !GetAtt [MyDB, Endpoint.Port],
+          !GetAtt [CumulativeDB, Endpoint.Port],
           /,
-          !Ref "DBName",
+          !Ref "CumulativeDBName",
           "?user=",
-          !Ref DBUser,
+          !Ref CumulativeDBUser,
           "&password=",
-          !Ref DBPassword,
+          !Ref CumulativeDBPassword,
         ],
       ]
+    Export:
+      Name: !Join [":", [!Ref "AWS::StackName", "CumulativeJDBCURI"]]
+  DailyJDBCURI:
+    Description: JDBC connection string for Daily database
+    Value:
+      !Join [
+        "",
+        [
+          "jdbc:postgresql://",
+          !GetAtt [DailyDB, Endpoint.Address],
+          ":",
+          !GetAtt [DailyDB, Endpoint.Port],
+          /,
+          !Ref "DailyDBName",
+          "?user=",
+          !Ref DailyDBUser,
+          "&password=",
+          !Ref DailyDBPassword,
+        ],
+      ]
+    Export:
+      Name: !Join [":", [!Ref "AWS::StackName", "DailyJDBCURI"]]
+  NationalJDBCURI:
+    Description: JDBC connection string for National database
+    Value:
+      !Join [
+        "",
+        [
+          "jdbc:postgresql://",
+          !GetAtt [NationalDB, Endpoint.Address],
+          ":",
+          !GetAtt [NationalDB, Endpoint.Port],
+          /,
+          !Ref "NationalDBName",
+          "?user=",
+          !Ref NationalDBUser,
+          "&password=",
+          !Ref NationalDBPassword,
+        ],
+      ]
+    Export:
+      Name: !Join [":", [!Ref "AWS::StackName", "NationalJDBCURI"]]
