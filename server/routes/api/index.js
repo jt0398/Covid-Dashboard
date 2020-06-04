@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const dataPullUSARoute = require("./dataPullUSA");
 
-router.use("/getUSData", dataPullUSARoute);  
+router.use("/getUSAData", dataPullUSARoute);  
 
 module.exports = router;

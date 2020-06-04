@@ -1,15 +1,10 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('National_Daily_Trends', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    return queryInterface.createTable("National_Daily_Trends", {
       dateReported: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        primaryKey: true,
       },
       confirmed: {
         type: Sequelize.INTEGER,
@@ -28,15 +23,15 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('National_Daily_Trends');
-  }
+    return queryInterface.dropTable("National_Daily_Trends");
+  },
 };

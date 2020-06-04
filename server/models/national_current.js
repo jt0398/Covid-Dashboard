@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
       active: DataTypes.INTEGER,
       recovered: DataTypes.INTEGER,
       deceased: DataTypes.INTEGER,
-      tested: DataTypes.INTEGER
+      tested: DataTypes.INTEGER,
     },
-    {}
+    { freezeTableName: true }
   );
   National_Current.associate = function (models) {
     // associations can be defined here
