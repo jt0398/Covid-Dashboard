@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "root",
+    "username": "postgres",
     "password": "password",
-    "database": "database_development",
+    "database": "coviddashboard",
     "host": "127.0.0.1",
-    "dialect": "mysql",
+    "dialect": "postgres",
+    "port": "5432",
     "operatorsAliases": false,
     "logging": false
   },
