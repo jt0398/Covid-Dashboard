@@ -1,5 +1,5 @@
 {
-  "name": "scheduled-datapull",
+  "name": "poll-data-service",
   "version": "1.0.0",
   "description": "Application that grabs data from an open API at scheduled intervals and inserts to a DB",
   "main": "server.js",
@@ -12,28 +12,19 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
     "test": "cross-env NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles --coverage=true",
-    "install": "npm install",
-    "build": "npm run build",
-    "heroku-postbuild": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/unnikrishnan-r/scheduled-datapull.git"
+    "build": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/unnikrishnan-r/scheduled-datapull/issues"
-  },
-  "homepage": "https://github.com/unnikrishnan-r/scheduled-datapull#readme",
   "dependencies": {
     "axios": "^0.19.2",
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "if-env": "^1.0.4",
-    "mysql2": "^2.1.0",
+    "pg": "^8.2.1",
+    "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
