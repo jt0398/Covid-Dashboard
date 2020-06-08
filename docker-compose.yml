@@ -58,7 +58,7 @@ services:
       - ./server/national-total-service:/usr/src/app
 
   national-total-db:
-    container_name: daily-trend-service
+    container_name: national-total-db
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
