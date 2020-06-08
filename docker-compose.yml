@@ -5,12 +5,14 @@ services:
       context: "./server/cumulative-trend-service/"
     depends_on:
       - cumulative-trend-db
+    container_name: cumulative-trend-service
     ports:
       - "3001:3001"
     volumes:
       - ./server/cumulative-trend-service:/usr/src/app
 
   cumulative-trend-db:
+    container_name: cumulative-trend-db
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -26,12 +28,14 @@ services:
       context: "./server/daily-trend-service/"
     depends_on:
       - daily-trend-db
+    container_name: daily-trend-service
     ports:
       - "3002:3002"
     volumes:
       - ./server/daily-trend-service:/usr/src/app
 
   daily-trend-db:
+    container_name: daily-trend-db
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -47,12 +51,14 @@ services:
       context: "./server/national-total-service/"
     depends_on:
       - national-total-db
+    container_name: national-total-service
     ports:
       - "3003:3003"
     volumes:
       - ./server/national-total-service:/usr/src/app
 
   national-total-db:
+    container_name: daily-trend-service
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -65,8 +71,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    depends_on:
-      - postgres
+    container_name: pgadmin
     ports:
       - "8080:80"
     environment:
