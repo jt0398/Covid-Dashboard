@@ -12,7 +12,7 @@ services:
       - ./server/cumulative-trend-service:/usr/src/app
 
   cumulative-trend-db:
-    container_name: cumulative-trend-db
+    container_name: cumulative-trend-db-server
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -35,7 +35,7 @@ services:
       - ./server/daily-trend-service:/usr/src/app
 
   daily-trend-db:
-    container_name: daily-trend-db
+    container_name: daily-trend-db-server
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
@@ -58,7 +58,7 @@ services:
       - ./server/national-total-service:/usr/src/app
 
   national-total-db:
-    container_name: national-total-db
+    container_name: national-total-db-server
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
