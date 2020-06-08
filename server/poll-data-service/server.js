@@ -44,7 +44,7 @@ Promise.all(syncDBPromises).then(function () {
       PORT,
       PORT
     );
-    //job.start();
+    job.start();
   });
 });
 
