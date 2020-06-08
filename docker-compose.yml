@@ -63,6 +63,17 @@ services:
     volumes:
       - nationalDB-data:/var/lib/postgresql/data/
 
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: password
+    restart: unless-stopped
+
 volumes:
   cumulativeDB-data:
   dailyDB-data:
