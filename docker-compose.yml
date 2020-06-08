@@ -12,12 +12,12 @@ services:
 
   cumulative-trend-db:
     environment:
-      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=cumulative-trend-db
     image: postgres:latest
     ports:
       - "3005:5432"
+    volumes:
+      - cumulativeDB-data:/var/lib/postgresql/data/
 
   daily-trend-service:
     build:
@@ -31,12 +31,12 @@ services:
 
   daily-trend-db:
     environment:
-      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-      - MYSQL_DATABASE=daily-trend-db
     image: postgres:latest
     ports:
       - "3006:5432"
+    volumes:
+      - dailyDB-data:/var/lib/postgresql/data/
 
   national-total-service:
     build:
@@ -50,9 +50,14 @@ services:
 
   national-total-db:
     environment:
-      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-      - MYSQL_DATABASE=national-total-db
     image: postgres:latest
     ports:
       - "3007:5432"
+    volumes:
+      - nationalDB-data:/var/lib/postgresql/data/
+
+volumes:
+  cumulativeDB-data:
+  dailyDB-data:
+  nationalDB-data:
