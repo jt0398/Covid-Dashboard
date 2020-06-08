@@ -12,7 +12,9 @@ services:
 
   cumulative-trend-db:
     environment:
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cumulative-trend-db
     image: postgres:latest
     ports:
       - "3005:5432"
@@ -31,7 +33,9 @@ services:
 
   daily-trend-db:
     environment:
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=daily-trend-db
     image: postgres:latest
     ports:
       - "3006:5432"
@@ -50,7 +54,9 @@ services:
 
   national-total-db:
     environment:
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=national-total-db
     image: postgres:latest
     ports:
       - "3007:5432"
