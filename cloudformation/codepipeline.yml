@@ -36,7 +36,8 @@ Resources:
               "selection": {
                 "tagStatus": "any",
                 "countType": "imageCountMoreThan",
-                "countNumber": 1
+                # Below line means maximum 1 docker instance inside the ECR
+                "countNumber": 1                     
               },
               "action": { "type": "expire" }
             }]
@@ -90,6 +91,27 @@ Resources:
         LifecyclePolicyText: |
           {
             "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 1 image",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+
+          #Create polldata ecr Repository
+  ECRRepositoryPollData:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "pollservice-ecr"]]
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules":[
             {
               "rulePriority": 1,
               "description": "Only keep 1 image",
@@ -271,6 +293,36 @@ Resources:
         # This file (buildspec.yml In Source code) contains commands to Create and Push a docker image to the ECR_REPOSITORY_URI
         BuildSpec: server/national-total-service/buildspec.yml
 
+  #Build for PollData
+  BuildProjectPollData:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:2.0
+        ImagePullCredentialsType: CODEBUILD
+        PrivilegedMode: True
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: ECR_REPOSITORY_URI
+            Value:
+              !Join [
+                ".",
+                [
+                  !Ref "AWS::AccountId",
+                  "dkr.ecr",
+                  !Ref "AWS::Region",
+                  !Join ["/", ["amazonaws.com", !Ref "ECRRepositoryPollData"]],
+                ],
+              ]
+      Name: !Join ["-", [!Ref "AwS::StackName", "polldata-buildproject"]]
+      ServiceRole: !Ref CodeBuildExecutionRole
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: server/poll-data-service/buildspec.yml
+
   # Create CodePipeline with 3 stages (Source, Build and Deploy)
   CodePipeLine:
     Type: AWS::CodePipeline::Pipeline
@@ -357,6 +409,19 @@ Resources:
                 - Name: source-output-artifacts
               Configuration:
                 ProjectName: !Ref BuildProjectNational
+              RunOrder: 1
+            - Name: BuildPollData
+              ActionTypeId:
+                Category: Build
+                Owner: AwS
+                Version: "1"
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: build-output-artifacts-polldata
+              InputArtifacts:
+                - Name: source-output-artifacts
+              Configuration:
+                ProjectName: !Ref BuildProjectPollData
               RunOrder: 1
 
         # Deploy the project by executing ecs-service-client.yml file in the Source code with Cloudformation.
@@ -457,4 +522,30 @@ Resources:
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "national-ecs-service"]]
                 TemplatePath: source-output-artifacts::cloudformation/ecs-service-national.yml
+              RunOrder: 1
+
+              #Deploy CloudFormation For PollData
+            - Name: DeployPollData
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: source-output-artifacts
+                - Name: build-output-artifacts-polldata
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_NAMED_IAM
+                #Pass parameter to ecs-service-polldata.yml for deployment
+                ParameterOverrides: !Sub |
+                  {
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
+                    "StackName": "${StackName}"
+                  }
+                RoleArn:
+                  Fn::GetAtt: [CloudformationExecutionRole, Arn]
+                StackName:
+                  !Join ["-", [!Ref "AWS::StackName", "polldata-ecs-service"]]
+                TemplatePath: source-output-artifacts::cloudformation/ecs-pollservice.yml
               RunOrder: 1
