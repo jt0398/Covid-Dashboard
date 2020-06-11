@@ -13,6 +13,10 @@ const PORT = process.env.PORT || 3004;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "From polldata service" });
+});
+
 // Routes
 app.use(routes);
 

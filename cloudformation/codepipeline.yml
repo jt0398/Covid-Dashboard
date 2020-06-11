@@ -36,7 +36,6 @@ Resources:
               "selection": {
                 "tagStatus": "any",
                 "countType": "imageCountMoreThan",
-                # Below line means maximum 1 docker instance inside the ECR
                 "countNumber": 1                     
               },
               "action": { "type": "expire" }
@@ -103,15 +102,14 @@ Resources:
             }]
           }
 
-          #Create polldata ecr Repository
   ECRRepositoryPollData:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "pollservice-ecr"]]
+      RepositoryName: !Join ["-", [!Ref "AWS::StackName", "polldata-ecr"]]
       LifecyclePolicy:
         LifecyclePolicyText: |
           {
-            "rules":[
+            "rules": [
             {
               "rulePriority": 1,
               "description": "Only keep 1 image",
@@ -317,7 +315,7 @@ Resources:
                   !Join ["/", ["amazonaws.com", !Ref "ECRRepositoryPollData"]],
                 ],
               ]
-      Name: !Join ["-", [!Ref "AwS::StackName", "polldata-buildproject"]]
+      Name: !Join ["-", [!Ref "AWS::StackName", "polldata-buildproject"]]
       ServiceRole: !Ref CodeBuildExecutionRole
       Source:
         Type: CODEPIPELINE
@@ -337,7 +335,6 @@ Resources:
         Fn::GetAtt: [CodePipeLineExecutionRole, Arn]
 
       Stages:
-        # Download source code from Github Repo to source-output-artifacts path in S3 Bucket
         - Name: Source
           Actions:
             - Name: Source
@@ -413,7 +410,7 @@ Resources:
             - Name: BuildPollData
               ActionTypeId:
                 Category: Build
-                Owner: AwS
+                Owner: AWS
                 Version: "1"
                 Provider: CodeBuild
               OutputArtifacts:
@@ -439,7 +436,6 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
-                # Pass parameter values to ecs-service-client.yml for deployment
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-client", "imageDetail-Client.json", "ImageURI"] },
@@ -463,7 +459,6 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
-                # Pass parameter values to ecs-service-cumulative.yml for deployment
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-cumulative", "imageDetail-Cumulative.json", "ImageURI"] },
@@ -487,7 +482,6 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
-                # Pass parameter values to ecs-service-daily.yml for deployment
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-daily", "imageDetail-Daily.json", "ImageURI"] },
@@ -511,7 +505,6 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
-                # Pass parameter values to ecs-service-national.yml for deployment
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-national", "imageDetail-National.json", "ImageURI"] },
@@ -537,7 +530,6 @@ Resources:
               Configuration:
                 ActionMode: CREATE_UPDATE
                 Capabilities: CAPABILITY_NAMED_IAM
-                #Pass parameter to ecs-service-polldata.yml for deployment
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
