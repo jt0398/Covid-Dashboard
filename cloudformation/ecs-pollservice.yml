@@ -9,7 +9,7 @@ Parameters:
       to locate and reference resources created by that stack.
   ServiceName:
     Type: String
-    Default: client
+    Default: polldata
     Description: A name for the service
   ImageURI:
     Type: String
