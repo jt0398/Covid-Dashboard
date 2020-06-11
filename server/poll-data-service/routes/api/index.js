@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const dataPullUSARoute = require("./dataPullUSA");
 
-router.use("/getUSAData", dataPullUSARoute);  
+router.use("/polldata", dataPullUSARoute);
 
 module.exports = router;
