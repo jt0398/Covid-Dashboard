@@ -30,7 +30,7 @@ phases:
       - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
       - cd ../../
       - echo $PWD
-      - printf '{"ImageURI":"%s:%s"}' $ECR_REPOSITORY_URI $IMAGE_TAG > imageDetail-PollData.json
+      - printf '{"ImageURI":"%s:%s"}' $ECR_REPOSITORY_URI $IMAGE_TAG > imageDetail-Polldata.json
 artifacts:
   files:
-    - imageDetail-PollData.json
+    - imageDetail-Polldata.json
