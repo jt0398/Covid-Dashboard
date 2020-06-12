@@ -532,7 +532,7 @@ Resources:
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-PollData.json", "ImageURI"] },
+                    "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
                     "StackName": "${StackName}"
                   }
                 RoleArn:
