@@ -9,7 +9,7 @@ Parameters:
       to locate and reference resources created by that stack.
   ServiceName:
     Type: String
-    Default: national
+    Default: servicename
     Description: A name for the service
   ImageURI:
     Type: String
@@ -18,7 +18,7 @@ Parameters:
       will handle the traffic for this service
   ContainerPort:
     Type: Number
-    Default: 3003
+    Default: 80
     Description: What port number the application inside the docker container is binding to
   ContainerCpu:
     Type: Number
@@ -30,13 +30,13 @@ Parameters:
     Description: How much memory in megabytes to give the container
   Path:
     Type: String
-    Default: "/api/national"
+    Default: "/"
     Description: A path on the public load balancer that this service
       should be connected to. Use * to send all load balancer
       traffic to this service.
   Priority:
     Type: Number
-    Default: 3
+    Default: 0
     Description: The priority for the routing rule added to the load balancer.
       This only applies if your have multiple services which have been
       assigned to different paths on the load balancer.

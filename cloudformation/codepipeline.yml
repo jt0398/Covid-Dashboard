@@ -439,7 +439,11 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-client", "imageDetail-Client.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "client",
+                    "ContainerPort": "3000",
+                    "Path": "/",
+                    "Priority": "4"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -462,7 +466,11 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-cumulative", "imageDetail-Cumulative.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "cumulative",
+                    "ContainerPort": "3001",
+                    "Path": "/api/cumulative",
+                    "Priority": "1"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -485,7 +493,11 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-daily", "imageDetail-Daily.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "daily",
+                    "ContainerPort": "3002",
+                    "Path": "/api/daily",
+                    "Priority": "2"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -508,7 +520,11 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-national", "imageDetail-National.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "national",
+                    "ContainerPort": "3003",
+                    "Path": "/api/national",
+                    "Priority": "3"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -517,7 +533,7 @@ Resources:
                 TemplatePath: source-output-artifacts::cloudformation/ecs-service-national.yml
               RunOrder: 1
 
-              #Deploy CloudFormation For PollData
+              # Deploy CloudFormation For PollData
             - Name: DeployPollData
               ActionTypeId:
                 Category: Deploy
@@ -533,7 +549,11 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "polldata",
+                    "ContainerPort": "3004",
+                    "Path": "/api/polldata",
+                    "Priority": "5"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
