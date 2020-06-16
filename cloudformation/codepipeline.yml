@@ -449,7 +449,7 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "client-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-client.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployCumulative
               ActionTypeId:
@@ -476,7 +476,7 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "cumulative-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-cumulative.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployDaily
               ActionTypeId:
@@ -503,7 +503,7 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "daily-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-daily.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployNational
               ActionTypeId:
@@ -530,7 +530,7 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "national-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-national.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
 
               # Deploy CloudFormation For PollData
@@ -559,5 +559,5 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "polldata-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-pollservice.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
