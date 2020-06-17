@@ -88,9 +88,16 @@ Resources:
             Options:
               awslogs-group: !Ref LogGroup
               awslogs-region: !Ref "AWS::Region"
-              awslogs-stream-prefix:
-                "ecs"
-                # The service. The service is a resource which allows you to run multiple
+              awslogs-stream-prefix: "ecs"
+      Enviornment:
+        - name: "CumulativeJDBCURI"
+          value: ""
+        - name: "DailyJDBCURI"
+          value: ""
+        - name: "NationalJDBCURI"
+          value:
+            ""
+            # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
   Service:
