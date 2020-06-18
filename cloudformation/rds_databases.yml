@@ -112,6 +112,7 @@ Resources:
       MasterUserPassword: !Ref "CumulativeDBPassword"
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
+      BackupRetentionPeriod: 0
 
   DailyDB:
     Type: AWS::RDS::DBInstance
@@ -125,6 +126,7 @@ Resources:
       MasterUserPassword: !Ref "DailyDBPassword"
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
+      BackupRetentionPeriod: 0
 
   NationalDB:
     Type: AWS::RDS::DBInstance
@@ -138,6 +140,7 @@ Resources:
       MasterUserPassword: !Ref "NationalDBPassword"
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
+      BackupRetentionPeriod: 0
 
 Outputs:
   CumulativeJDBCURI:
