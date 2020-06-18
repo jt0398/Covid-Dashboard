@@ -19,6 +19,12 @@ Parameters:
   GithubOAuthToken:
     Type: String
     Default: <GITHUB ACCESS TOKEN>
+  CumulativeDBURI:
+    Type: String
+  NationalDBURI:
+    Type: String
+  DailyDBURI:
+    Type: String
 
 Resources:
   # Create an ECR Repository to store docker images
@@ -533,7 +539,10 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "CumulativeDBURI": "${CumulativeDBURI}",
+                    "NationalDBURI": "${NationalDBURI}",
+                    "DailyDBURI": "${DailyDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
