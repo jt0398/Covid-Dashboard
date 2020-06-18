@@ -50,6 +50,12 @@ Parameters:
     Description:
       (Optional) An IAM role to give the service's containers if the code within needs to
       access other AWS resources like S3 buckets, DynamoDB tables, etc
+  CumulativeDBURI:
+    Type: String
+  DailyDBURI:
+    Type: String
+  NationalDBURI:
+    Type: String
 
 Conditions:
   HasCustomRole: !Not [!Equals [!Ref "Role", ""]]
@@ -91,12 +97,12 @@ Resources:
               awslogs-stream-prefix: "ecs"
       Enviornment:
         - name: "CumulativeJDBCURI"
-          value: ""
+          value: Ref! CumulativeDBURI
         - name: "DailyJDBCURI"
-          value: ""
+          value: "Ref! DailyDBURI"
         - name: "NationalJDBCURI"
           value:
-            ""
+            "Ref! NationalDBURI"
             # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
   # as monitor the number of running tasks and replace any that have crashed
