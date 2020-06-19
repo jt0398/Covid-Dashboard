@@ -157,36 +157,32 @@ Outputs:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [CumulativeDB, Endpoint.Address],
-          ":",
-          !GetAtt [CumulativeDB, Endpoint.Port],
-          /,
-          !Ref "CumulativeDBName",
-          "?user=",
+          "postgres://",
           !Ref CumulativeDBUser,
-          "&password=",
+          ":",
           !Ref CumulativeDBPassword,
+          "@",
+          !GetAtt [CumulativeDB, Endpoint.Address],
+          ":5432/",
+          !Ref "CumulativeDBName",
         ],
       ]
     Export:
-      Name: !Join [":", [!Ref "AWS::StackName", "CumulativeJDBCURI"]]
+      Name: !Join [":", [!Ref "AWS::StackName", "CumulativeDBURI"]]
   DailyJDBCURI:
     Description: JDBC connection string for Daily database
     Value:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [DailyDB, Endpoint.Address],
-          ":",
-          !GetAtt [DailyDB, Endpoint.Port],
-          /,
-          !Ref "DailyDBName",
-          "?user=",
+          "postgres://",
           !Ref DailyDBUser,
-          "&password=",
+          ":",
           !Ref DailyDBPassword,
+          "@",
+          !GetAtt [DailyDB, Endpoint.Address],
+          ":5432/",
+          !Ref "DailyDBName",
         ],
       ]
     Export:
@@ -197,16 +193,14 @@ Outputs:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [NationalDB, Endpoint.Address],
-          ":",
-          !GetAtt [NationalDB, Endpoint.Port],
-          /,
-          !Ref "NationalDBName",
-          "?user=",
+          "postgres://",
           !Ref NationalDBUser,
-          "&password=",
+          ":",
           !Ref NationalDBPassword,
+          "@",
+          !GetAtt [NationalDB, Endpoint.Address],
+          ":5432/",
+          !Ref "NationalDBName",
         ],
       ]
     Export:

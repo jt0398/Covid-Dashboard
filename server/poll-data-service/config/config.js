@@ -56,17 +56,19 @@ module.exports = {
     },
   },
   production: {
-    CumulativeDB: {
-      use_env_variable: "Cumulative_JAWSDB_URL",
-      dialect: "postgres",
-    },
-    DailyDB: {
-      use_env_variable: "Daily_JAWSDB_URL",
-      dialect: "postgres",
-    },
-    NationalDB: {
-      use_env_variable: "National_JAWSDB_URL",
-      dialect: "postgres",
+    databases: {
+      CumulativeDB: {
+        use_env_variable: "Cumulative_JAWSDB_URL",
+        dialect: "postgres",
+      },
+      DailyDB: {
+        use_env_variable: "Daily_JAWSDB_URL",
+        dialect: "postgres",
+      },
+      NationalDB: {
+        use_env_variable: "National_JAWSDB_URL",
+        dialect: "postgres",
+      },
     },
   },
 };
