@@ -78,11 +78,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin
       PGADMIN_DEFAULT_PASSWORD: password
     restart: unless-stopped
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
 
 volumes:
   cumulativeDB-data:
   dailyDB-data:
   nationalDB-data:
-  pgadmin-data:

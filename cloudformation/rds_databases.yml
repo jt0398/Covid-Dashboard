@@ -112,12 +112,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
-<<<<<<< HEAD
       VPCSecurityGroups:
         - Fn::ImportValue:
             !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
-=======
->>>>>>> master
 
   DailyDB:
     Type: AWS::RDS::DBInstance
@@ -132,12 +129,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
-<<<<<<< HEAD
       VPCSecurityGroups:
         - Fn::ImportValue:
             !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
-=======
->>>>>>> master
 
   NationalDB:
     Type: AWS::RDS::DBInstance
@@ -152,12 +146,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
-<<<<<<< HEAD
       VPCSecurityGroups:
         - Fn::ImportValue:
             !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
-=======
->>>>>>> master
 
 Outputs:
   CumulativeJDBCURI:

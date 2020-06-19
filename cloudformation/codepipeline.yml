@@ -476,7 +476,8 @@ Resources:
                     "ServiceName": "cumulative",
                     "ContainerPort": "3001",
                     "Path": "/api/cumulative",
-                    "Priority": "1"
+                    "Priority": "1",
+                    "CumulativeDBURI": "${CumulativeDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -503,7 +504,8 @@ Resources:
                     "ServiceName": "daily",
                     "ContainerPort": "3002",
                     "Path": "/api/daily",
-                    "Priority": "2"
+                    "Priority": "2",         
+                    "DailyDBURI": "${DailyDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -530,7 +532,8 @@ Resources:
                     "ServiceName": "national",
                     "ContainerPort": "3003",
                     "Path": "/api/national",
-                    "Priority": "3"
+                    "Priority": "3",
+                    "NationalDBURI": "${NationalDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
@@ -556,16 +559,13 @@ Resources:
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
                     "StackName": "${StackName}",
-<<<<<<< HEAD
                     "ServiceName": "polldata",
                     "ContainerPort": "3004",
                     "Path": "/api/polldata",
-                    "Priority": "5"
-=======
+                    "Priority": "5",
                     "CumulativeDBURI": "${CumulativeDBURI}",
                     "NationalDBURI": "${NationalDBURI}",
                     "DailyDBURI": "${DailyDBURI}"
->>>>>>> master
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
