@@ -56,6 +56,7 @@ module.exports = {
     },
   },
   production: {
+<<<<<<< HEAD
     databases: {
       CumulativeDB: {
         use_env_variable: "Cumulative_JAWSDB_URL",
@@ -69,6 +70,19 @@ module.exports = {
         use_env_variable: "National_JAWSDB_URL",
         dialect: "postgres",
       },
+=======
+    CumulativeDB: {
+      use_env_variable: "CumulativeJDBCURI",
+      dialect: "postgres",
+    },
+    DailyDB: {
+      use_env_variable: "DailyJDBCURI",
+      dialect: "postgres",
+    },
+    NationalDB: {
+      use_env_variable: "NationalJDBCURI",
+      dialect: "postgres",
+>>>>>>> master
     },
   },
 };
