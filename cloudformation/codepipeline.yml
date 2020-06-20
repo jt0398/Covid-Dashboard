@@ -448,7 +448,7 @@ Resources:
                     "StackName": "${StackName}",
                     "ServiceName": "client",
                     "ContainerPort": "3000",
-                    "Path": "/",
+                    "Path": "/*",
                     "Priority": "4"
                   }
                 RoleArn:
@@ -475,7 +475,7 @@ Resources:
                     "StackName": "${StackName}",
                     "ServiceName": "cumulative",
                     "ContainerPort": "3001",
-                    "Path": "/api/cumulative",
+                    "Path": "/api/cumulative/*",
                     "Priority": "1",
                     "CumulativeDBURI": "${CumulativeDBURI}"
                   }
@@ -503,7 +503,7 @@ Resources:
                     "StackName": "${StackName}",
                     "ServiceName": "daily",
                     "ContainerPort": "3002",
-                    "Path": "/api/daily",
+                    "Path": "/api/daily/*",
                     "Priority": "2",         
                     "DailyDBURI": "${DailyDBURI}"
                   }
@@ -531,7 +531,7 @@ Resources:
                     "StackName": "${StackName}",
                     "ServiceName": "national",
                     "ContainerPort": "3003",
-                    "Path": "/api/national",
+                    "Path": "/api/national/*",
                     "Priority": "3",
                     "NationalDBURI": "${NationalDBURI}"
                   }
@@ -561,7 +561,7 @@ Resources:
                     "StackName": "${StackName}",
                     "ServiceName": "polldata",
                     "ContainerPort": "3004",
-                    "Path": "/api/polldata",
+                    "Path": "/api/polldata/*",
                     "Priority": "5",
                     "CumulativeDBURI": "${CumulativeDBURI}",
                     "NationalDBURI": "${NationalDBURI}",
