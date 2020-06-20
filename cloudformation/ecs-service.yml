@@ -102,11 +102,11 @@ Resources:
             - Name: NODE_ENV
               Value: production
             - Name: CumulativeJDBCURI
-              Value: Ref! CumulativeDBURI
+              Value: !Ref CumulativeDBURI
             - Name: DailyJDBCURI
-              Value: Ref! DailyDBURI
+              Value: !Ref DailyDBURI
             - Name: NationalJDBCURI
-              Value: Ref! NationalDBURI
+              Value: !Ref NationalDBURI
 
   # The service. The service is a resource which allows you to run multiple
   # copies of a type of task, and gather up their logs and metrics, as well
