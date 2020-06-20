@@ -56,17 +56,19 @@ module.exports = {
     },
   },
   production: {
-    CumulativeDB: {
-      use_env_variable: "CumulativeJDBCURI",
-      dialect: "postgres",
-    },
-    DailyDB: {
-      use_env_variable: "DailyJDBCURI",
-      dialect: "postgres",
-    },
-    NationalDB: {
-      use_env_variable: "NationalJDBCURI",
-      dialect: "postgres",
+    databases: {
+      CumulativeDB: {
+        use_env_variable: "CumulativeJDBCURI",
+        dialect: "postgres",
+      },
+      DailyDB: {
+        use_env_variable: "DailyJDBCURI",
+        dialect: "postgres",
+      },
+      NationalDB: {
+        use_env_variable: "NationalJDBCURI",
+        dialect: "postgres",
+      },
     },
   },
 };

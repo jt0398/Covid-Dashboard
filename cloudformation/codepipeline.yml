@@ -445,13 +445,17 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-client", "imageDetail-Client.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "client",
+                    "ContainerPort": "3000",
+                    "Path": "/*",
+                    "Priority": "4"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "client-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-client.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployCumulative
               ActionTypeId:
@@ -468,13 +472,18 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-cumulative", "imageDetail-Cumulative.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "cumulative",
+                    "ContainerPort": "3001",
+                    "Path": "/api/cumulative/*",
+                    "Priority": "1",
+                    "CumulativeDBURI": "${CumulativeDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "cumulative-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-cumulative.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployDaily
               ActionTypeId:
@@ -491,13 +500,18 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-daily", "imageDetail-Daily.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "daily",
+                    "ContainerPort": "3002",
+                    "Path": "/api/daily/*",
+                    "Priority": "2",         
+                    "DailyDBURI": "${DailyDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "daily-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-daily.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
             - Name: DeployNational
               ActionTypeId:
@@ -514,16 +528,21 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-national", "imageDetail-National.json", "ImageURI"] },
-                    "StackName": "${StackName}"
+                    "StackName": "${StackName}",
+                    "ServiceName": "national",
+                    "ContainerPort": "3003",
+                    "Path": "/api/national/*",
+                    "Priority": "3",
+                    "NationalDBURI": "${NationalDBURI}"
                   }
                 RoleArn:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "national-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-service-national.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1
 
-              #Deploy CloudFormation For PollData
+              # Deploy CloudFormation For PollData
             - Name: DeployPollData
               ActionTypeId:
                 Category: Deploy
@@ -540,6 +559,10 @@ Resources:
                   {
                     "ImageURI" : { "Fn::GetParam" : ["build-output-artifacts-polldata", "imageDetail-Polldata.json", "ImageURI"] },
                     "StackName": "${StackName}",
+                    "ServiceName": "polldata",
+                    "ContainerPort": "3004",
+                    "Path": "/api/polldata/*",
+                    "Priority": "5",
                     "CumulativeDBURI": "${CumulativeDBURI}",
                     "NationalDBURI": "${NationalDBURI}",
                     "DailyDBURI": "${DailyDBURI}"
@@ -548,5 +571,5 @@ Resources:
                   Fn::GetAtt: [CloudformationExecutionRole, Arn]
                 StackName:
                   !Join ["-", [!Ref "AWS::StackName", "polldata-ecs-service"]]
-                TemplatePath: source-output-artifacts::cloudformation/ecs-pollservice.yml
+                TemplatePath: source-output-artifacts::cloudformation/ecs-service.yml
               RunOrder: 1

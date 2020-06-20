@@ -5,9 +5,8 @@ Description: "Deploys RDS databases for multiple microservices"
 Parameters:
   StackName:
     Type: String
-    Default: dev-vpc
-    Description:
-      The name of the parent cluster stack that you created. Necessary
+    Default: <VPC STACK NAME>
+    Description: The name of the VPC stack that you created. Necessary
       to locate and reference resources created by that stack.
   CumulativeDBName:
     Description: Cumulative database name
@@ -113,6 +112,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
+      VPCSecurityGroups:
+        - Fn::ImportValue:
+            !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
 
   DailyDB:
     Type: AWS::RDS::DBInstance
@@ -127,6 +129,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
+      VPCSecurityGroups:
+        - Fn::ImportValue:
+            !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
 
   NationalDB:
     Type: AWS::RDS::DBInstance
@@ -141,6 +146,9 @@ Resources:
       DBSubnetGroupName: !Ref RDSSubnetGroup
       PubliclyAccessible: true
       BackupRetentionPeriod: 0
+      VPCSecurityGroups:
+        - Fn::ImportValue:
+            !Join [":", [!Ref "StackName", "EcsHostSecurityGroup"]]
 
 Outputs:
   CumulativeJDBCURI:
@@ -149,36 +157,32 @@ Outputs:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [CumulativeDB, Endpoint.Address],
-          ":",
-          !GetAtt [CumulativeDB, Endpoint.Port],
-          /,
-          !Ref "CumulativeDBName",
-          "?user=",
+          "postgres://",
           !Ref CumulativeDBUser,
-          "&password=",
+          ":",
           !Ref CumulativeDBPassword,
+          "@",
+          !GetAtt [CumulativeDB, Endpoint.Address],
+          ":5432/",
+          !Ref "CumulativeDBName",
         ],
       ]
     Export:
-      Name: !Join [":", [!Ref "AWS::StackName", "CumulativeJDBCURI"]]
+      Name: !Join [":", [!Ref "AWS::StackName", "CumulativeDBURI"]]
   DailyJDBCURI:
     Description: JDBC connection string for Daily database
     Value:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [DailyDB, Endpoint.Address],
-          ":",
-          !GetAtt [DailyDB, Endpoint.Port],
-          /,
-          !Ref "DailyDBName",
-          "?user=",
+          "postgres://",
           !Ref DailyDBUser,
-          "&password=",
+          ":",
           !Ref DailyDBPassword,
+          "@",
+          !GetAtt [DailyDB, Endpoint.Address],
+          ":5432/",
+          !Ref "DailyDBName",
         ],
       ]
     Export:
@@ -189,16 +193,14 @@ Outputs:
       !Join [
         "",
         [
-          "jdbc:postgresql://",
-          !GetAtt [NationalDB, Endpoint.Address],
-          ":",
-          !GetAtt [NationalDB, Endpoint.Port],
-          /,
-          !Ref "NationalDBName",
-          "?user=",
+          "postgres://",
           !Ref NationalDBUser,
-          "&password=",
+          ":",
           !Ref NationalDBPassword,
+          "@",
+          !GetAtt [NationalDB, Endpoint.Address],
+          ":5432/",
+          !Ref "NationalDBName",
         ],
       ]
     Export:
