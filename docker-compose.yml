@@ -10,6 +10,7 @@ services:
       - "3001:3001"
     volumes:
       - ./server/cumulative-trend-service:/usr/src/app
+    command: nodemon --watch views -e js server.js
 
   cumulative-trend-db:
     container_name: cumulative-trend-db-server
@@ -33,6 +34,7 @@ services:
       - "3002:3002"
     volumes:
       - ./server/daily-trend-service:/usr/src/app
+    command: nodemon --watch views -e js server.js
 
   daily-trend-db:
     container_name: daily-trend-db-server
@@ -56,6 +58,7 @@ services:
       - "3003:3003"
     volumes:
       - ./server/national-total-service:/usr/src/app
+    command: nodemon --watch views -e js server.js
 
   national-total-db:
     container_name: national-total-db-server
