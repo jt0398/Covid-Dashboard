@@ -1,19 +1,15 @@
-FROM node:10
+FROM node:12.18.0-alpine3.9
 
 WORKDIR /usr/src/app
 
-# set path to run packages from node_modules
-ENV PATH /usr/src/app/node_modules/.bin$PATH
+COPY package*.json ./
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
 RUN npm install --silent
-
-RUN npm run build
 
 # add app
 COPY . ./
+
+RUN npm run build
 
 EXPOSE 3000
 

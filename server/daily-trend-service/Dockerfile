@@ -1,10 +1,10 @@
-FROM node:10
+FROM node:12.18.0-alpine3.9
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --silent
 
 COPY . .
 
