@@ -1,15 +1,15 @@
 version: "3"
 services:
-  cumulative-trend-service:
-    build:
-      context: "./server/cumulative-trend-service/"
-    depends_on:
-      - cumulative-trend-db
-    container_name: cumulative-trend-service
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./server/cumulative-trend-service:/usr/src/app
+  # cumulative-trend-service:
+  #   build:
+  #     context: "./server/cumulative-trend-service/"
+  #   depends_on:
+  #     - cumulative-trend-db
+  #   container_name: cumulative-trend-service
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ./server/cumulative-trend-service:/usr/src/app
 
   cumulative-trend-db:
     container_name: cumulative-trend-db-server
