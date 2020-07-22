@@ -19,3 +19,5 @@ db.sequelizeConnection.sync(syncOptions).then(function () {
     console.log(`Server is up on ${PORT}`);
   });
 });
+
+// app.listen(PORT, () => `Server running on port ${PORT} 🔥`);
