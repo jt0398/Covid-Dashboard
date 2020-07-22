@@ -9,7 +9,7 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "node server.js",
-    "start:dev": "./wait-for-postgres.sh nodemon",
+    "start:dev": "nodemon",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
@@ -24,7 +24,6 @@
     "axios": "^0.19.2",
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
-    "eslint": "^7.4.0",
     "express": "^4.17.1",
     "if-env": "^1.0.4",
     "pg": "^8.2.1",
@@ -32,7 +31,11 @@
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
     "psql": "0.0.1",
     "sequelize-cli": "^5.5.1"
   }
