@@ -1,5 +1,5 @@
 {
-  "name": "cumulative-trend-service",
+  "name": "daily-trend-service",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -19,6 +19,7 @@
     "sequelize": "^5.21.9"
   },
   "devDependencies": {
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4"
   }
 }
