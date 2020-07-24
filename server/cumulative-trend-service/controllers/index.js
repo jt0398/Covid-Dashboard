@@ -1,5 +1,5 @@
 const db = require("../models");
-var sequelize = require("sequelize");
+
 module.exports = {
   getActiveCount: (req, res) => {
     db.National_History.findAll({})
