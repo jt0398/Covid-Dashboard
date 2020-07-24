@@ -1,5 +1,5 @@
 {
-  "name": "cumulative-trend-service",
+  "name": "daily-trend-service",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

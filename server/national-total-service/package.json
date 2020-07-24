@@ -1,9 +1,10 @@
 {
-  "name": "cumulative-trend-service",
+  "name": "national-total-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,5 +15,8 @@
     "express": "^4.17.1",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
