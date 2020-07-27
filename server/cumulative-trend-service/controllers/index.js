@@ -1,11 +1,12 @@
 const db = require("../models");
-var sequelize = require("sequelize");
 
 module.exports = {
   getActiveCount: (req, res) => {
-    // res.status(200).json({ inside: "cumulative controller" });
     db.National_History.findAll({})
-      .then((dbModel) => res.json(dbModel))
+      .then((dbModel) => {
+        console.log(dbModel.length);
+        res.json({ data: dbModel, length: dbModel.length, status: 200 });
+      })
       .catch((err) => res.status(22).json(err));
   },
 };
