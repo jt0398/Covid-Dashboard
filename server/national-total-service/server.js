@@ -4,7 +4,9 @@ const app = express();
 app.get("/api/national", (req, res) => {
   res
     .status(200)
-    .json({ message: "Hello world from a National Trend Service!" });
+    .json({
+      message: "Hello world from a National Trend Service! Test Nodemon",
+    });
 });
 
 app.listen(3003, () => {
