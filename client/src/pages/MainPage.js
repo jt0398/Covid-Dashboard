@@ -3,19 +3,44 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import API from "../utils/API";
+import ActiveGraph from "../components/ActiveGraph";
 
 class MainPage extends Component {
   state = {
-    dailyData: [],
+    dates: [],
+    active: [],
+    confirmed: [],
+    recovered: [],
+    deceased: [],
+    tested: [],
   };
 
   loadDailyData = () => {
     API.getDailyCount().then((res) => {
-      this.setState({
-        dailyData: res.data,
+      let dates = [];
+      let active = [];
+      let confirmed = [];
+      let recovered = [];
+      let deceased = [];
+      let tested = [];
+
+      res.data.forEach((data) => {
+        dates.push(data.dateReported);
+        confirmed.push(data.confirmed);
+        active.push(data.active);
+        recovered.push(data.recovered);
+        deceased.push(data.deceased);
+        tested.push(data.tested);
       });
 
-      console.log("Dail Data:" + this.state.dailyData);
+      this.setState({
+        dates,
+        active,
+        confirmed,
+        recovered,
+        deceased,
+        tested,
+      });
     });
   };
 
@@ -27,7 +52,16 @@ class MainPage extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col>Main Page</Col>
+          <Col md="6">
+            {this.state.dates.length > 0 ? (
+              <ActiveGraph
+                graphlabels={this.state.dates}
+                graphdata={this.state.active}
+              />
+            ) : (
+              ""
+            )}
+          </Col>
         </Row>
       </Container>
     );

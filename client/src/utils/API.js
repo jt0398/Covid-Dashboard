@@ -4,7 +4,7 @@ export default {
   getDailyCount: function () {
     let dailySvcURL = process.env.REACT_APP_DAILY_SVC_URL;
 
-    return axios.get(`${dailySvcURL}/api/daily/count`);
+    return axios.get(`${dailySvcURL}/api/daily/allcount`);
   },
   getCumulativeCount: function () {
     let cumulativeSvcURL = process.env.REACT_APP_CUMULATIVE_SVC_URL;

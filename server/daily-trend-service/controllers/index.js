@@ -1,12 +1,17 @@
 const db = require("../models");
-const momemt = require("moment");
+const moment = require("moment");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 module.exports = {
   getAllCount: function (req, res) {
-    db.National_Daily_Trend.findAll({ order: [["dateReported", "DESC"], where: {
-      start_datetime: {
-        [Op.gte]: moment().subtract(7, 'days').toDate()
-      }
+    db.National_Daily_Trend.findAll({
+      order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
     })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
