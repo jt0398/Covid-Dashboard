@@ -6,7 +6,7 @@ const Op = Sequelize.Op;
 module.exports = {
   getAllCount: function (req, res) {
     db.National_History.findAll({
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
@@ -19,7 +19,7 @@ module.exports = {
   getActiveCount: function (req, res) {
     db.National_History.findAll({
       attributes: ["dateReported", "active"],
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
@@ -32,7 +32,7 @@ module.exports = {
   getConfirmedCount: function (req, res) {
     db.National_History.findAll({
       attributes: ["dateReported", "confirmed"],
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
@@ -45,7 +45,7 @@ module.exports = {
   getRecoveredCount: function (req, res) {
     db.National_History.findAll({
       attributes: ["dateReported", "recovered"],
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
@@ -58,7 +58,7 @@ module.exports = {
   getDeceasedCount: function (req, res) {
     db.National_History.findAll({
       attributes: ["dateReported", "deceased"],
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
@@ -71,7 +71,7 @@ module.exports = {
   getTestedCount: function (req, res) {
     db.National_History.findAll({
       attributes: ["dateReported", "tested"],
-      order: [["dateReported", "DESC"]],
+      order: [["dateReported"]],
       where: {
         dateReported: {
           [Op.gte]: moment().subtract(1, "months").toDate(),
