@@ -20,6 +20,11 @@ module.exports = {
     db.National_Daily_Trend.findAll({
       attributes: ["dateReported", "active"],
       order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
     })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
@@ -27,6 +32,12 @@ module.exports = {
   getConfirmedCount: function (req, res) {
     db.National_Daily_Trend.findAll({
       attributes: ["dateReported", "confirmed"],
+      order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
     })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
@@ -34,6 +45,12 @@ module.exports = {
   getRecoveredCount: function (req, res) {
     db.National_Daily_Trend.findAll({
       attributes: ["dateReported", "recovered"],
+      order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
     })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
@@ -41,12 +58,26 @@ module.exports = {
   getDeceasedCount: function (req, res) {
     db.National_Daily_Trend.findAll({
       attributes: ["dateReported", "deceased"],
+      order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
     })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
   },
   getTestedCount: function (req, res) {
-    db.National_Daily_Trend.findAll({ attributes: ["dateReported", "tested"] })
+    db.National_Daily_Trend.findAll({
+      attributes: ["dateReported", "tested"],
+      order: [["dateReported", "DESC"]],
+      where: {
+        dateReported: {
+          [Op.gte]: moment().subtract(1, "months").toDate(),
+        },
+      },
+    })
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(22).json(err));
   },
