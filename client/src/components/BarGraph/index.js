@@ -28,7 +28,20 @@ class BarGraph extends Component {
     return (
       <>
         <h3>{this.tile}</h3>
-        <Bar data={this.config} />
+        <Bar
+          data={this.config}
+          options={{
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+          }}
+        />
       </>
     );
   }

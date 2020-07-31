@@ -9,9 +9,9 @@ class MainPage extends Component {
 
   render() {
     return (
-      <Container fluid>
+      <Container>
         <Row>
-          <Col md="6">
+          <Col>
             <DailyContainer />
           </Col>
         </Row>

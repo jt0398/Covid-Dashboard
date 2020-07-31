@@ -52,7 +52,7 @@ class DailyContainer extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col md="6">
+          <Col className="p-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Active"
@@ -63,6 +63,78 @@ class DailyContainer extends Component {
                 hoverbgcolor="rgba(255,99,132,0.4)"
                 hoverbordercolor="rgba(255,99,132,1)"
                 graphlabel="Active Cases"
+              />
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-5">
+            {this.state.dates.length > 0 ? (
+              <BarGraph
+                title="Confirmed"
+                barlabels={this.state.dates}
+                bardata={this.state.confirmed}
+                bgcolor="rgba(26,117,255,0.2)"
+                bordercolor="rgba(0,61,153,1)"
+                hoverbgcolor="rgba(26,117,255,0.4)"
+                hoverbordercolor="rgba(0,61,153,1)"
+                graphlabel="Confirmed Cases"
+              />
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-5">
+            {this.state.dates.length > 0 ? (
+              <BarGraph
+                title="Recovered"
+                barlabels={this.state.dates}
+                bardata={this.state.recovered}
+                bgcolor="rgba(0,179,60,0.2)"
+                bordercolor="rgba(0,102,34,1)"
+                hoverbgcolor="rgba(0,179,60,0.4)"
+                hoverbordercolor="rgba(0,102,34,1)"
+                graphlabel="Recovered Cases"
+              />
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-5">
+            {this.state.dates.length > 0 ? (
+              <BarGraph
+                title="Deceased"
+                barlabels={this.state.dates}
+                bardata={this.state.deceased}
+                bgcolor="rgba(102,102,102,0.2)"
+                bordercolor="rgba(51,51,51,1)"
+                hoverbgcolor="rgba(102,102,102,0.4)"
+                hoverbordercolor="rgba(51,51,51,1)"
+                graphlabel="Deceased Cases"
+              />
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-5">
+            {this.state.dates.length > 0 ? (
+              <BarGraph
+                title="Tested"
+                barlabels={this.state.dates}
+                bardata={this.state.tested}
+                bgcolor="rgba(115,0,230,0.2)"
+                bordercolor="rgba(64,0,128,1)"
+                hoverbgcolor="rgba(115,0,230,0.4)"
+                hoverbordercolor="rgba(64,0,128,1)"
+                graphlabel="Tested Cases"
               />
             ) : (
               ""
