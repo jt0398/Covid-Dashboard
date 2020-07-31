@@ -1,14 +1,13 @@
-const express = require("express");
-const app = express();
+const app = require("./app.js");
+const db = require("./models");
 
-app.get("/api/national", (req, res) => {
-  res
-    .status(200)
-    .json({
-      message: "Hello world from a National Trend Service! Test Nodemon",
-    });
-});
+const PORT = process.env.PORT || 3003;
 
-app.listen(3003, () => {
-  console.log("Server is up on 3003");
+var syncOptions = {};
+syncOptions.force = process.env.SYNC_MODEL === "true" ? true : false;
+
+db.sequelizeConnection.sync(syncOptions).then(function () {
+  app.listen(PORT, () => {
+    console.log(`Server is up on ${PORT}`);
+  });
 });
