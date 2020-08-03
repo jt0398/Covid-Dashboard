@@ -1,65 +1,31 @@
 import React, { Component } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import API from "../utils/API";
-import ActiveGraph from "../components/ActiveGraph";
+import DailyContainer from "../components/DailyContainer";
+import CumulativeContainer from "../components/CumulativeContainer";
 
 class MainPage extends Component {
   state = {
-    dates: [],
-    active: [],
-    confirmed: [],
-    recovered: [],
-    deceased: [],
-    tested: [],
+    mode: "C",
   };
-
-  loadDailyData = () => {
-    API.getDailyCount().then((res) => {
-      let dates = [];
-      let active = [];
-      let confirmed = [];
-      let recovered = [];
-      let deceased = [];
-      let tested = [];
-
-      res.data.forEach((data) => {
-        dates.push(data.dateReported);
-        confirmed.push(data.confirmed);
-        active.push(data.active);
-        recovered.push(data.recovered);
-        deceased.push(data.deceased);
-        tested.push(data.tested);
-      });
-
-      this.setState({
-        dates,
-        active,
-        confirmed,
-        recovered,
-        deceased,
-        tested,
-      });
-    });
-  };
-
-  componentDidMount() {
-    this.loadDailyData();
-  }
 
   render() {
     return (
-      <Container fluid>
+      <Container>
         <Row>
-          <Col md="6">
-            {this.state.dates.length > 0 ? (
-              <ActiveGraph
-                graphlabels={this.state.dates}
-                graphdata={this.state.active}
-              />
+          <Col className="pt-2 m-5">
+            <Button className="h3 p-3 mr-2">Cumulative</Button>
+            <Button className="h3 p-3">Daily</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {this.state.mode === "C" ? (
+              <CumulativeContainer />
             ) : (
-              ""
+              <DailyContainer />
             )}
           </Col>
         </Row>
