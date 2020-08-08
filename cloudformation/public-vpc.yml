@@ -172,7 +172,7 @@ Resources:
     Properties:
       Description: Ingress from the public ALB
       GroupId: !Ref "EcsHostSecurityGroup"
-      IpProtocol: "-1"
+      IpProtocol: "80"
       SourceSecurityGroupId: !Ref "PublicLoadBalancerSG"
   EcsSecurityGroupIngressFromSelf:
     Type: AWS::EC2::SecurityGroupIngress
@@ -356,7 +356,7 @@ Resources:
       SecurityGroupIngress:
         # Allow access to ALB from anywhere on the internet
         - CidrIp: 0.0.0.0/0
-          IpProtocol: "-1"
+          IpProtocol: "80"
 
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
