@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import DailyContainer from "../components/DailyContainer";
 import CumulativeContainer from "../components/CumulativeContainer";
+import NationalContainer from "../components/NationalContainer";
 
 class MainPage extends Component {
   state = {
@@ -29,10 +30,15 @@ class MainPage extends Component {
     return (
       <Container>
         <Row>
-          <Col className="pt-2 m-5">
+          <Col className="my-5">
+            <NationalContainer />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="m-2">
             <Button
-              className="h3 p-3 mr-2"
-              variant={mode === "C" ? "secondary" : "primary"}
+              className="h3 p-3 mr-2 b-1"
+              variant={mode === "C" ? "dark" : "light"}
               onClick={this.handleClick}
               data-mode="C"
             >
@@ -42,7 +48,7 @@ class MainPage extends Component {
               className="h3 p-3"
               onClick={this.handleClick}
               data-mode="D"
-              variant={mode === "D" ? "secondary" : "primary"}
+              variant={mode === "D" ? "dark" : "light"}
             >
               Daily
             </Button>

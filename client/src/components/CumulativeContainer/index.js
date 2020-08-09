@@ -54,17 +54,17 @@ class DailyContainer extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <LineGraph
                 title="Active"
                 linelabels={this.state.dates}
                 linedata={this.state.active}
                 bgcolor="rgba(255,99,132,0.4)"
-                bordercolor="rgba(255,99,132,1)"
-                pointbordercolor="rgba(255,99,132,1)"
-                pointhoverbgcolor="rgba(255,99,132,1)"
-                pointhoverbordercolor="rgba(255,99,132,1)"
+                bordercolor="rgba(255,51,51,1)"
+                pointbordercolor="rgba(255,51,51,1)"
+                pointhoverbgcolor="rgba(255,51,51,1)"
+                pointhoverbordercolor="rgba(255,51,51,1)"
                 graphlabel="Active Cases"
               />
             ) : (
@@ -73,7 +73,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <LineGraph
                 title="Confirmed"
@@ -92,7 +92,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <LineGraph
                 title="Recovered"
@@ -111,7 +111,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <LineGraph
                 title="Deceased"
@@ -130,7 +130,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <LineGraph
                 title="Tested"

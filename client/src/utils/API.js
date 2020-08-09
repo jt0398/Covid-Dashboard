@@ -9,8 +9,6 @@ export default {
   getCumulativeCount: function () {
     let cumulativeSvcURL = process.env.REACT_APP_CUMULATIVE_SVC_URL || "";
 
-    console.log(cumulativeSvcURL);
-
     return axios.get(`${cumulativeSvcURL}/api/cumulative/allcount`);
   },
   getNationalCount: function () {

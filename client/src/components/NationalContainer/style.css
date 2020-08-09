@@ -1,0 +1,19 @@
+.active {
+  color: #ff3333;
+}
+
+.confirmed {
+  color: #003d99;
+}
+
+.recovered {
+  color: #006622;
+}
+
+.deceased {
+  color: #333333;
+}
+
+.tested {
+  color: #400080;
+}

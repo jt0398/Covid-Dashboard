@@ -54,16 +54,16 @@ class DailyContainer extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Active"
                 barlabels={this.state.dates}
                 bardata={this.state.active}
-                bgcolor="rgba(255,99,132,0.2)"
-                bordercolor="rgba(255,99,132,1)"
-                hoverbgcolor="rgba(255,99,132,0.4)"
-                hoverbordercolor="rgba(255,99,132,1)"
+                bgcolor="rgba(255,51,51,0.2)"
+                bordercolor="rgba(255,51,51,1)"
+                hoverbgcolor="rgba(255,51,51,0.4)"
+                hoverbordercolor="rgba(255,51,51,1)"
                 graphlabel="Active Cases"
               />
             ) : (
@@ -72,7 +72,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Confirmed"
@@ -90,7 +90,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Recovered"
@@ -108,7 +108,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Deceased"
@@ -126,7 +126,7 @@ class DailyContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-5">
+          <Col className="pb-5">
             {this.state.dates.length > 0 ? (
               <BarGraph
                 title="Tested"
