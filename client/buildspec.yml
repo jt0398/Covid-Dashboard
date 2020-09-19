@@ -20,7 +20,7 @@ phases:
       - cd client
       - echo $PWD
       - echo Building the Docker image...
-      - docker build -t $ECR_REPOSITORY_URI:latest .
+      - docker build -f Dockerfile.prod -t $ECR_REPOSITORY_URI:latest .
       - docker tag $ECR_REPOSITORY_URI:latest $ECR_REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:

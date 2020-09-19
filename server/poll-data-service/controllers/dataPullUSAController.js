@@ -9,7 +9,7 @@ module.exports = {
       console.log("Getting Current Summary via API route");
     }
     axios
-      .get("http://covidtracking.com/api/us")
+      .get("https://api.covidtracking.com/v1/us/current.json")
       .then(function (response) {
         let nationalCurrent = {};
         let nationalData = response.data[0];
@@ -51,7 +51,7 @@ module.exports = {
       console.log("Getting Daily Summary via API route");
     }
     axios
-      .get("https://covidtracking.com/api/us/daily")
+      .get("https://api.covidtracking.com/v1/us/daily.json")
       .then(function (response) {
         let dataToInsert = [];
         response.data.map((nationalData) => {
@@ -115,7 +115,7 @@ module.exports = {
       console.log("Getting Daily Increase via API route");
     }
     axios
-      .get("https://covidtracking.com/api/us/daily")
+      .get("https://api.covidtracking.com/v1/us/daily.json")
       .then(function (response) {
         let dataToInsert = [];
         // response.data.map((nationalData) => {
