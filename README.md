@@ -29,10 +29,15 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 ├── docker-compose.yml          <-- Docker configuration for local DEV containers
 ```
 
-## Services Deployed
+## AWS Services Used
 
-- A Lambda function for publishing messages to Amazon MQ over MQTT.
-- An Amazon MQ SINGLE_INSTANCE broker.
+- CodePipeline for CI/CD
+- S3
+- ALB
+- Auto Scaling
+- ECS and ECR Repository
+- CloudWatch Logs
+- RDS databases
 
 ## Requirements
 
@@ -56,16 +61,20 @@ docker-compose down
 
 ## Deploy to AWS
 
-1.
-1.
-1. Provide the required app parameters (see parameter details below) and click "Deploy"
+1. Create a GitHub Personal access token if you do not have one
+1. Login to [AWS console](https://console.aws.amazon.com/)
+1. Create an EC2 Key Pair if you do not have one
+1. Create CloudFormation stack in order:
+   - Public VPC
+   - RDS Databases
+   - CodePipeline
+
+Provide the required app parameters (see parameter details below).
 
 ## Parameter Details
 
-- AdminUsername: (Required) A username for AmazonMQ console access.
-- AdminPassword: (Required) A password for AmazonMQ console access. 12 characters and at least 4 unique characters.
-- ClientUsername: (Required) A username for a client.
-- ClientPassword: (Required) A password for a client. 12 characters and at least 4 unique characters.
+- EC2KeyPair: (Required) EC2 key pair to use to SSH to EC2 instances.
+- ELBAccountID: (Requied) Get the ID from https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html for the region that hosts the ELB
 
 ## Contributors
 
