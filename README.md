@@ -26,7 +26,7 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 │  └── poll-data-service            <-- Source code for a CRON job that pulls data from The COVID Tracking Project API
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-├── docker-compose.yml          <-- Docker configuration for local DEV containers
+├── docker-compose.yml            <-- Docker configuration for local DEV containers
 ```
 
 ## AWS Services Used
