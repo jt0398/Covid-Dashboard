@@ -5,25 +5,25 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 ```bash
 .
 ├── README.MD                       <-- This instructions file
-├── client                          <-- Source code for a React dashboard application
+├── client                          <-- Source code for React dashboard application
 │  └── src
 │  └── Dockerfile                   <-- Docker build commands
 │  └── package.json                 <-- React dependencies and scripts
 ├── cloudformation                  <-- AWS CloudFormation templates for CI/CD
 |── server
-│  └── cumulative-trend-service     <-- Source code for an API (cumulative daily stats)
+│  └── cumulative-trend-service     <-- Source code for API (cumulative daily stats)
 │       └── app.js                  <-- API routes
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-│  └── daily-trend-service          <-- Source code for an API (daily stats)
+│  └── daily-trend-service          <-- Source code for API (daily stats)
 │       └── app.js                  <-- API routes
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-│  └── national-total-service       <-- Source code for an API (national stats)
+│  └── national-total-service       <-- Source code for API (national stats)
 │       └── app.js                  <-- API routes
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-│  └── poll-data-service            <-- Source code for a CRON job that pulls
+│  └── poll-data-service            <-- Source code for CRON job that pulls
 |                                       data from The COVID Tracking Project API
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
