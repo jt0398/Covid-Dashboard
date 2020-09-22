@@ -23,7 +23,8 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 │       └── app.js                  <-- API routes
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-│  └── poll-data-service            <-- Source code for a CRON job that pulls data from The COVID Tracking Project API
+│  └── poll-data-service            <-- Source code for a CRON job that pulls
+|                                       data from The COVID Tracking Project API
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
 ├── docker-compose.yml            <-- Docker configuration for local DEV containers
@@ -47,7 +48,7 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 
 ## Using this Application
 
-To run the applications, run the following commands in the project root directory
+Run the following commands in the project root directory
 
 ```bash
 docker-compose up
