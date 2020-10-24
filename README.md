@@ -27,7 +27,7 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 |                                       data from The COVID Tracking Project API
 │       └── server.js               <-- Express server
 │       └── package.json            <-- NodeJS dependencies and scripts
-├── docker-compose.yml            <-- Docker configuration for local DEV containers
+├── docker-compose.yml              <-- Docker configuration for local DEV containers
 ```
 
 ## AWS Services Used
@@ -72,7 +72,7 @@ docker-compose down
 
 Provide the required app parameters (see parameter details below).
 
-## Parameter Details
+## CloudFormation Parameters
 
 - EC2KeyPair: (Required) EC2 key pair to use to SSH to EC2 instances.
 - ELBAccountID: (Requied) Get the ID from https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html for the region that hosts the ELB
