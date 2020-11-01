@@ -4,8 +4,8 @@
   "description": "",
   "main": "publisher.js",
   "scripts": {
-    "publish": "node publisher.js",
-    "consume": "node consumer.js"
+    "publish": "nodemon publisher.js",
+    "consume": "nodemon consumer.js"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +13,8 @@
   "dependencies": {
     "amqplib": "^0.6.0",
     "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }

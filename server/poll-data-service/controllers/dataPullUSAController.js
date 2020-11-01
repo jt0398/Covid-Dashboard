@@ -1,5 +1,7 @@
 const db = require("../models");
 const axios = require("axios").default;
+const amqp = require("amqplib");
+const { ConnectionError } = require("sequelize");
 
 module.exports = {
   getCurrentSummary: function (req, res) {
@@ -10,7 +12,7 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/current.json")
-      .then(function (response) {
+      .then(async function (response) {
         let nationalCurrent = {};
         let nationalData = response.data[0];
         nationalCurrent.id = 1;
@@ -19,7 +21,7 @@ module.exports = {
         nationalCurrent.recovered = nationalData.recovered;
         nationalCurrent.deceased = nationalData.death;
         nationalCurrent.tested = nationalData.totalTestResults;
-        db.National_Current.upsert(nationalCurrent)
+        /* db.National_Current.upsert(nationalCurrent)
           .then((dbModel) => {
             if (!res) {
               console.log(dbModel ? "Inserted" : "Updated");
@@ -37,7 +39,16 @@ module.exports = {
             } else {
               res.status(400).json(err);
             }
-          });
+          }); */
+
+        const connection = await amqp.connect(process.env.AMQP_URL);
+        const channel = await connection.createChannel();
+        const queue = await channel.assertQueue("NationalCurrent");
+        channel.sendToQueue(
+          "NationalCurrent",
+          Buffer.from(JSON.stringify(nationalData))
+        );
+        console.log(JSON.stringify(nationalData));
       })
       .catch(function (error) {
         console.error(error);

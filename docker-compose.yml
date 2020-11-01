@@ -118,6 +118,14 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
+  rabbitmq:
+    image: rabbitmq:3.8
+    container_name: rabbit1
+    ports:
+      - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: DSHEVCXBBETJJVJWTOWT    
+
 volumes:
   cumulativeDB-data:
   dailyDB-data:

@@ -8,8 +8,6 @@ const env = process.env.NODE_ENV || "development";
 const config = require(`${__dirname}/../config/config.js`)[env];
 const db = {};
 
-console.log(config);
-
 //Extract the database information into an array
 const databases = Object.keys(config.databases);
 
