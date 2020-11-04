@@ -1,16 +1,11 @@
 const axios = require("axios").default;
 const amqp = require("amqplib");
-const { ConnectionError } = require("sequelize");
 
-async function addMessage(queueName, data)
-{
+async function addMessage(queueName, data) {
   const connection = await amqp.connect(process.env.AMQP_URL);
   const channel = await connection.createChannel();
   const queue = await channel.assertQueue(queueName);
-  channel.sendToQueue(
-    queueName,
-    Buffer.from(JSON.stringify(data))
-  );  
+  channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
 }
 
 module.exports = {
@@ -34,9 +29,7 @@ module.exports = {
 
         addMessage(process.env.NATIONAL_QUEUE, nationalData);
 
-        if(res) 
-          res.status(200).json(nationalData);
-       
+        if (res) res.status(200).json(nationalData);
       })
       .catch(function (error) {
         console.error(error);
@@ -51,9 +44,9 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/daily.json")
-      .then(function (response) {
+      .then(async function (response) {
         let dataToInsert = [];
-        response.data.map((nationalData) => {         
+        response.data.map((nationalData) => {
           let nationalDailyData = {};
           nationalDailyData.dateReported = nationalData.dateChecked;
           nationalDailyData.confirmed = nationalData.positive
@@ -75,11 +68,9 @@ module.exports = {
           dataToInsert.push(nationalDailyData);
         });
 
-        addMessage(process.env.CUMULATIVE_QUEUE, nationalDailyData);
+        addMessage(process.env.CUMULATIVE_QUEUE, dataToInsert);
 
-        if(res) 
-          res.status(200).json(nationalDailyData);        
-        
+        if (res) res.status(200).json(nationalDailyData);
       })
       .catch(function (error) {
         console.error(error);
@@ -94,9 +85,9 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/daily.json")
-      .then(function (response) {
+      .then(async function (response) {
         let dataToInsert = [];
-       
+
         for (i = 0; i < response.data.length - 1; i++) {
           let nationalDailyData = {};
           nationalData = response.data[i];
@@ -126,7 +117,7 @@ module.exports = {
           dataToInsert.push(nationalDailyData);
         }
 
-        addMessage(process.env.DAILY_QUEUE, nationalDailyData);
+        addMessage(process.env.DAILY_QUEUE, dataToInsert);
       })
       .catch(function (error) {
         console.error(error);
