@@ -29,10 +29,7 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach(function (file) {
-    var model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
+    var model = sequelizeConnection.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 

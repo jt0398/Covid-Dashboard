@@ -29,6 +29,8 @@ module.exports = {
 
         addMessage(process.env.NATIONAL_QUEUE, nationalData);
 
+        console.log("National stats added to the queue");
+
         if (res) res.status(200).json(nationalData);
       })
       .catch(function (error) {
@@ -70,7 +72,9 @@ module.exports = {
 
         addMessage(process.env.CUMULATIVE_QUEUE, dataToInsert);
 
-        if (res) res.status(200).json(nationalDailyData);
+        console.log("Cumulative stats added to the queue");
+
+        if (res) res.status(200).json(dataToInsert);
       })
       .catch(function (error) {
         console.error(error);
@@ -118,6 +122,10 @@ module.exports = {
         }
 
         addMessage(process.env.DAILY_QUEUE, dataToInsert);
+
+        console.log("Daily stats added to the queue");
+
+        if (res) res.status(200).json(dataToInsert);
       })
       .catch(function (error) {
         console.error(error);
