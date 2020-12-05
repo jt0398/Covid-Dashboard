@@ -1,8 +1,32 @@
 const axios = require("axios").default;
 const amqp = require("amqplib");
 
+function getMQConnection(MQ_URL) {
+  amqp.connect(MQ_URL + "?heartbeat=60", function (err, conn) {
+    if (err) {
+      console.error("[MQ]", err.message);
+      return setTimeout(start, 1000);
+    }
+    conn.on("error", function (err) {
+      if (err.message !== "Connection closing") {
+        console.error("[MQ] conn error", err.message);
+      }
+    });
+    conn.on("close", function () {
+      console.error("[MQ] reconnecting");
+      return setTimeout(start, 1000);
+    });
+
+    console.log("[MQ] connected");
+    return (amqpConn = conn);
+  });
+}
+
 async function addMessage(queueName, data) {
-  const connection = await amqp.connect(process.env.AMQP_URL);
+  const connection = getMQConnection(process.env.AMQP_URL);
+
+  if (!connection) return;
+
   const channel = await connection.createChannel();
   const queue = await channel.assertQueue(queueName);
   channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
