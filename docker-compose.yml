@@ -7,6 +7,7 @@ services:
       - cumulative-trend-db
       - rabbitmq
     container_name: cumulative-trend-service
+    restart: unless-stopped
     ports:
       - "3001:3001"
     volumes:
@@ -33,6 +34,7 @@ services:
       - daily-trend-db
       - rabbitmq
     container_name: daily-trend-service
+    restart: unless-stopped
     ports:
       - "3002:3002"
     volumes:
@@ -59,6 +61,7 @@ services:
       - national-total-db
       - rabbitmq
     container_name: national-total-service
+    restart: unless-stopped
     ports:
       - "3003:3003"
     volumes:
@@ -84,6 +87,7 @@ services:
     depends_on:
       - rabbitmq
     container_name: poll-data-service
+    restart: unless-stopped
     ports:
       - "3004:3004"
     volumes:
@@ -99,6 +103,7 @@ services:
       - daily-trend-service
       - national-total-service
     container_name: client
+    restart: unless-stopped
     ports:
       - "80:3000"
     volumes:

@@ -10,17 +10,27 @@ async function start() {
     if (!connection) return;
 
     const channel = await connection.createChannel();
-    const result = await channel.assertQueue(process.env.NATIONAL_QUEUE);
+    const result = await channel.assertQueue(process.env.CUMULATIVE_QUEUE);
 
-    console.log("Start consume data in queue " + process.env.NATIONAL_QUEUE);
+    console.log("Start consume data in queue " + process.env.CUMULATIVE_QUEUE);
 
-    channel.consume(process.env.NATIONAL_QUEUE, (message) => {
-      const nationalCurrent = JSON.parse(message.content);
+    channel.consume(process.env.CUMULATIVE_QUEUE, (message) => {
+      const dataToInsert = JSON.parse(message.content);
       console.log(`National - Received job with input`);
 
-      db.National_Current.upsert(nationalCurrent)
+      db.National_History.bulkCreate(dataToInsert, {
+        updateOnDuplicate: [
+          "confirmed",
+          "active",
+          "positive",
+          "recovered",
+          "deceased",
+          "tested",
+          "updatedAt",
+        ],
+      })
         .then((dbModel) => {
-          console.log(dbModel ? "Inserted" : "Updated");
+          dbModel.length + " rows inserted/updated";
         })
         .catch((err) => {
           console.log(err);
