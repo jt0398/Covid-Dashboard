@@ -20,7 +20,6 @@ class NationalContainer extends Component {
   loadNationalData = () => {
     API.getNationalCount()
       .then((res) => {
-        console.log(res);
         this.setState({
           active: res.data[0].active,
           confirmed: res.data[0].confirmed,

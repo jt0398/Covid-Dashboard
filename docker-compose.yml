@@ -5,7 +5,9 @@ services:
       context: "./server/cumulative-trend-service/"
     depends_on:
       - cumulative-trend-db
+      - rabbitmq
     container_name: cumulative-trend-service
+    restart: unless-stopped
     ports:
       - "3001:3001"
     volumes:
@@ -30,7 +32,9 @@ services:
       context: "./server/daily-trend-service/"
     depends_on:
       - daily-trend-db
+      - rabbitmq
     container_name: daily-trend-service
+    restart: unless-stopped
     ports:
       - "3002:3002"
     volumes:
@@ -55,7 +59,9 @@ services:
       context: "./server/national-total-service/"
     depends_on:
       - national-total-db
+      - rabbitmq
     container_name: national-total-service
+    restart: unless-stopped
     ports:
       - "3003:3003"
     volumes:
@@ -79,10 +85,9 @@ services:
     build:
       context: "./server/poll-data-service/"
     depends_on:
-      - cumulative-trend-db
-      - daily-trend-db
-      - national-total-db
+      - rabbitmq
     container_name: poll-data-service
+    restart: unless-stopped
     ports:
       - "3004:3004"
     volumes:
@@ -98,6 +103,7 @@ services:
       - daily-trend-service
       - national-total-service
     container_name: client
+    restart: unless-stopped
     ports:
       - "80:3000"
     volumes:
@@ -112,11 +118,20 @@ services:
     ports:
       - "8080:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin
-      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DEFAULT_EMAIL: admin@dev.com
+      PGADMIN_DEFAULT_PASSWORD: SuperSecret
     restart: unless-stopped
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+
+  rabbitmq:
+    image: rabbitmq:3.8
+    container_name: rabbit1
+    ports:
+      - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: DSHEVCXBBETJJVJWTOWT  
+    restart: unless-stopped    
 
 volumes:
   cumulativeDB-data:
