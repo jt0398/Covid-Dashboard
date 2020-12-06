@@ -40,6 +40,14 @@ Deploy a microservice application to AWS ECS using CloudFormation. This project 
 - CloudWatch Logs
 - RDS databases
 
+## Other Tech Used
+
+- RabbitMQ
+- Docker
+- PostgreSQL
+- Node
+- React
+
 ## Requirements
 
 - [Create an AWS account](https://portal.aws.amazon.com/billing/signup#/start) if you do not have one.
@@ -76,6 +84,10 @@ Provide the required app parameters (see parameter details below).
 
 - EC2KeyPair: (Required) EC2 key pair to use to SSH to EC2 instances.
 - ELBAccountID: (Requied) Get the ID from https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-access-logs.html for the region that hosts the ELB
+
+## Outstanding Items
+
+- Use AWS Systems Manager Parameter Store for some of the CloudFormation parameters
 
 ## Contributors
 

@@ -1,5 +1,17 @@
-const db = require("../models");
 const axios = require("axios").default;
+const amqp = require("amqplib");
+
+async function addMessage(queueName, data) {
+  const connection = await amqp.connect(process.env.AMQP_URL);
+
+  if (!connection) return;
+
+  const channel = await connection.createChannel();
+  const queue = await channel.assertQueue(queueName);
+  channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
+
+  console.log("Data added to queue " + queueName);
+}
 
 module.exports = {
   getCurrentSummary: function (req, res) {
@@ -10,7 +22,7 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/current.json")
-      .then(function (response) {
+      .then(async function (response) {
         let nationalCurrent = {};
         let nationalData = response.data[0];
         nationalCurrent.id = 1;
@@ -19,25 +31,12 @@ module.exports = {
         nationalCurrent.recovered = nationalData.recovered;
         nationalCurrent.deceased = nationalData.death;
         nationalCurrent.tested = nationalData.totalTestResults;
-        db.National_Current.upsert(nationalCurrent)
-          .then((dbModel) => {
-            if (!res) {
-              console.log(dbModel ? "Inserted" : "Updated");
-              return dbModel ? "Inserted" : "Updated";
-            } else {
-              dbModel
-                ? res.status(200).json("Inserted")
-                : res.status(200).json("Updated");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            if (!res) {
-              return err;
-            } else {
-              res.status(400).json(err);
-            }
-          });
+
+        addMessage(process.env.NATIONAL_QUEUE, nationalCurrent);
+
+        console.log("National stats added to the queue");
+
+        if (res) res.status(200).json(nationalData);
       })
       .catch(function (error) {
         console.error(error);
@@ -52,10 +51,9 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/daily.json")
-      .then(function (response) {
+      .then(async function (response) {
         let dataToInsert = [];
         response.data.map((nationalData) => {
-          // console.log(nationalData1)
           let nationalDailyData = {};
           nationalDailyData.dateReported = nationalData.dateChecked;
           nationalDailyData.confirmed = nationalData.positive
@@ -76,32 +74,12 @@ module.exports = {
             : 0;
           dataToInsert.push(nationalDailyData);
         });
-        db.National_History.bulkCreate(dataToInsert, {
-          updateOnDuplicate: [
-            "confirmed",
-            "active",
-            "positive",
-            "recovered",
-            "deceased",
-            "tested",
-            "updatedAt",
-          ],
-        })
-          .then((dbModel) => {
-            if (!res) {
-              return dbModel.length + " rows inserted/updated";
-            } else {
-              res.status(200).json(dbModel.length + " rows inserted/updated");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            if (!res) {
-              return err;
-            } else {
-              res.status(400).json(err);
-            }
-          });
+
+        addMessage(process.env.CUMULATIVE_QUEUE, dataToInsert);
+
+        console.log("Cumulative stats added to the queue");
+
+        if (res) res.status(200).json(dataToInsert);
       })
       .catch(function (error) {
         console.error(error);
@@ -116,9 +94,9 @@ module.exports = {
     }
     axios
       .get("https://api.covidtracking.com/v1/us/daily.json")
-      .then(function (response) {
+      .then(async function (response) {
         let dataToInsert = [];
-        // response.data.map((nationalData) => {
+
         for (i = 0; i < response.data.length - 1; i++) {
           let nationalDailyData = {};
           nationalData = response.data[i];
@@ -148,33 +126,11 @@ module.exports = {
           dataToInsert.push(nationalDailyData);
         }
 
-        // });
-        db.National_Daily_Trend.bulkCreate(dataToInsert, {
-          updateOnDuplicate: [
-            "confirmed",
-            "active",
-            "positive",
-            "recovered",
-            "deceased",
-            "tested",
-            "updatedAt",
-          ],
-        })
-          .then((dbModel) => {
-            if (!res) {
-              return dbModel.length + " rows inserted/updated";
-            } else {
-              res.status(200).json(dbModel.length + " rows inserted/updated");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            if (!res) {
-              return err;
-            } else {
-              res.status(400).json(err);
-            }
-          });
+        addMessage(process.env.DAILY_QUEUE, dataToInsert);
+
+        console.log("Daily stats added to the queue");
+
+        if (res) res.status(200).json(dataToInsert);
       })
       .catch(function (error) {
         console.error(error);
